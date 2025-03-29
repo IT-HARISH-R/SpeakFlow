@@ -4,12 +4,12 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-     "dev": "nodemon src/index.js",
+    "dev": "nodemon src/index.js",
     "start": "node src/index.js"
   },
   "keywords": [],
   "author": "",
-  "type": "commonjs",
+  "type": "module",
   "license": "ISC",
   "description": "",
   "dependencies": {
@@ -19,7 +19,8 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.10.1"
+    "mongoose": "^8.10.1",
+    "speakflow": "file:.."
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

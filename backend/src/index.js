@@ -1,15 +1,16 @@
-const app = require("./app");
-const mongoose = require("mongoose");
-const { MONGO_DB_URI, PORT } = require("./utlis/config");
+import app from "./app.js";
+import mongoose from "mongoose";
+import { MONGO_DB_URI, PORT } from "./utlis/config.js";
 
-const port = PORT || 4000
+const port = PORT || 4000;
+
 mongoose.connect(MONGO_DB_URI)
     .then(() => {
-        console.log("Connecting database")
+        console.log("Database connected successfully");
         app.listen(port, () => {
-            console.log("server run");
-        })
+            console.log(`Server is running on port ${port}`);
+        });
     })
     .catch((error) => {
-        console.log(error)
-    })
+        console.error("Database connection error:", error);
+    });

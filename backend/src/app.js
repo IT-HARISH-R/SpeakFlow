@@ -1,12 +1,12 @@
-const express = require("express");
-const cors = require("cors");
-const cookieParser = require('cookie-parser');
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const path = require("path");
-
-
+// const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.resolve();
 const app = express();
-// const __dirname = path.resolve();
 
 app.use(express.json());
 app.use(cookieParser());
@@ -17,11 +17,7 @@ app.use(
     })
 );
 
-
-console.log("hello")
-
-
-
+// Remove the static file serving if not needed
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
@@ -30,6 +26,4 @@ if (process.env.NODE_ENV === "production") {
     });
 }
 
-
-module.exports = app;
-
+export default app; 
