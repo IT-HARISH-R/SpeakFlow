@@ -3,8 +3,8 @@ import Card from '../component/Card'
 
 const Home = () => {
   return (
-     <div className='flex flex-col justify-center bg-black h-[100vh]'>
-         <div className=' flex flex-row justify-center container mx-auto'>
+     <div className='flex flex-col justify-center bg-black mx-auto w-[100vw] h-[100vh]'>
+         <div className='flex justify-center'>
           <Card />
         </div>
     </div>
