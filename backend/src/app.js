@@ -3,19 +3,26 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
+import chatRoutes from "./routes/chatRouts.js";
 
 // const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.resolve();
 const app = express();
 
-app.use(express.json());
+app.use(express.json()); 
 app.use(cookieParser());
 app.use(
-    cors({
+    cors({ 
         origin: "http://localhost:5173",
         credentials: true,
     })
 );
+app.use('/api',chatRoutes)
+
+app.get("/", (req, res) => {
+    res.json({ message: "hi" });
+});
+
 
 // Remove the static file serving if not needed
 if (process.env.NODE_ENV === "production") {

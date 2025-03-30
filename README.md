@@ -1,4 +1,4 @@
-
+<!-- GemBot  -->
 
 ```js
 1️⃣ User Flow
@@ -22,7 +22,7 @@
    ↓ (Speaks)  
 [Frontend] (React) 🖥️  
    ↓ (Speech-to-Text API)  
-[Backend] (Node.js + Express) 🌐  
+[Backend] (Node.js + Express) 🌐   
    ↓ (Send text)  
 [OpenAI ChatGPT API] 🤖  
    ↓ (Get AI response)  
