@@ -19,9 +19,7 @@ app.use(
 );
 app.use('/api',chatRoutes)
 
-app.get("/", (req, res) => {
-    res.json({ message: "hi" });
-});
+
 
 
 // Remove the static file serving if not needed
