@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import { axiosInstance } from "../lib/axios";
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -10,6 +10,16 @@ const Chat = () => {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // Format AI response text to support markdown-like styles
+  const formatText = (text) => {
+    return text
+      .replace(/\*\*\*(.*?)\*\*\*/g, "<b><i>$1</i></b>") // ***Bold Italic***
+      .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") // **Bold**
+      .replace(/\*(.*?)\*/g, "<i>$1</i>") // *Italic*
+      .replace(/```([\s\S]*?)```/g, '<pre class="bg-gray-800 text-white p-2 rounded-lg">$1</pre>') // Code Blocks
+      .replace(/`(.*?)`/g, '<code class="bg-gray-200 p-1 rounded">$1</code>'); // Inline Code
+  };
 
   const sendMessage = async () => {
     if (input.trim() === "") return;
@@ -26,11 +36,12 @@ const Chat = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:3000/api/chat", { message: input });
+      const response = await axiosInstance.post("/chat", { message: input });
 
-      // ✅ Extract correct response text
-      const botReply =response.data.reply.response.candidates[0].content.parts[0].text
-      console.log('ll',botReply)
+      const botReply =
+        response?.data?.reply?.response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        "I'm not sure how to respond to that.";
+
       const botMessage = {
         id: messages.length + 2,
         sender: "SpeakFlow AI",
@@ -38,39 +49,49 @@ const Chat = () => {
         time: new Date().toLocaleTimeString(),
       };
 
-      console.log(response);
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       console.error("Error fetching AI response", error);
-      setMessages((prev) => [...prev, { id: messages.length + 2, sender: "Error", text: "Failed to get response. Try again.", time: new Date().toLocaleTimeString() }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: messages.length + 2,
+          sender: "Error",
+          text: "⚠️ Failed to get a response. Please try again.",
+          time: new Date().toLocaleTimeString(),
+        },
+      ]);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
+    <div className="flex flex-col h-screen bg-gray-100 ">
       {/* Header */}
-      <div className="bg-blue-600 text-white text-center p-4 font-semibold shadow-md">
-        SpeakFlow AI Chat
-      </div>
+      <header className="bg-blue-600 text-white text-center p-4 font-semibold shadow-md text-2xl lg:text-5xl">
+        GemBat  AI Chat
+      </header>
 
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+      <main className="flex-1 overflow-y-auto p-4 space-y-3 container mx-auto">
         {messages.map((msg) => (
           <div key={msg.id} className={`flex ${msg.sender === "User" ? "justify-end" : "justify-start"}`}>
-            <div className={`p-3 max-w-md shadow-md rounded-lg ${msg.sender === "User" ? "bg-blue-600 text-white" : "bg-white text-gray-800"}`}>
-              <p>{msg.text}</p>
-              <span className="text-gray-500 text-xs block mt-1">{msg.time}</span>
+            <div
+              className={`p-3 max-w-md shadow-md rounded-lg ${msg.sender === "User" ? "bg-blue-500 text-white" : "bg-white text-gray-800"
+                }`}
+            >
+              <p dangerouslySetInnerHTML={{ __html: formatText(msg.text) }}></p>
+              {/* <span className="text-black text-xs block mt-1">{msg.time}</span> */}
             </div>
           </div>
         ))}
-        {loading && <p className="text-gray-500 text-sm text-center">SpeakFlow AI is typing...</p>}
+        {loading && <p className="text-gray-500 text-sm text-center">GemBat AI is analyzing your query...</p>}
         <div ref={chatEndRef} />
-      </div>
+      </main>
 
       {/* Input Field */}
-      <div className="bg-white border-t p-4 flex">
+      <footer className="bg-white border-t p-4 flex container mx-auto rounded-t-2xl">
         <input
           type="text"
           placeholder="Type your message..."
@@ -81,10 +102,11 @@ const Chat = () => {
         />
         <button
           onClick={sendMessage}
-          className="p-2 bg-blue-600 text-white rounded-full ml-2 hover:bg-blue-700 transition">
+          className="p-2 bg-blue-600 text-white rounded-full ml-2 hover:bg-blue-700 transition"
+        >
           Send
         </button>
-      </div>
+      </footer>
     </div>
   );
 };
