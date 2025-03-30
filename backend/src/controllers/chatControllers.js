@@ -1,22 +1,28 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from "dotenv";
+import { GEMINI_API_KEY } from "../utlis/config.js";
 
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
- 
-const chatController = {
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+
+const chatController = { 
     chatRes: async (req, res) => {
         try {
             const { message } = req.body;
 
-            // Use the correct method to get the model
-            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+            // ✅ Use the correct model name
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
-            // Generate response
-            const result = await model.generateContent(message);
-            const response = result.response.text();
+            // ✅ Correct API request format
+            const result = await model.generateContent({
+                contents: [{ role: "user", parts: [{ text: message }] }]
+            });
 
+            // ✅ Extract response properly
+            // const response = result.candidates?.[0]?.content?.parts?.[0]?.text || "No response received.";
+            const response = result;
+            console.log(response)
             res.json({ reply: response });
 
         } catch (error) {
@@ -27,4 +33,3 @@ const chatController = {
 };
 
 export default chatController;
- 

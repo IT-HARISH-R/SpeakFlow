@@ -12,3 +12,4 @@ export const CLOUD_NAME = process.env.CLOUD_NAME;
 export const API_KEY = process.env.API_KEY;
 export const API_SECRET = process.env.API_SECRET;
 export const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+export const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
