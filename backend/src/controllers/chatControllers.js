@@ -6,23 +6,31 @@ dotenv.config();
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
-const chatController = { 
+const chatController = {
     chatRes: async (req, res) => {
         try {
             const { message } = req.body;
+            let userMessage = message;
 
-            // ✅ Use the correct model name
+            // Custom Response for "Hi"
+            if (userMessage.toLowerCase() === "hi") {
+                userMessage = "I'm your communication trainer. Are you ready? And say hi,.";
+            }
+
+            if (userMessage.toLowerCase() === "hello") {
+                userMessage = "I'm your communication trainer. Are you ready? And say hello,.";
+            }
+
+            // Initialize Gemini Model
             const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
-            // ✅ Correct API request format
-            const result = await model.generateContent({
-                contents: [{ role: "user", parts: [{ text: message }] }]
-            });
+            // Generate AI Response
+            const result = await model.generateContent([userMessage]);
 
-            // ✅ Extract response properly
-            // const response = result.candidates?.[0]?.content?.parts?.[0]?.text || "No response received.";
-            const response = result;
-            console.log(response)
+            // Extract Response Text
+            const response = result?.response?.text() || "No response received.";
+            console.log(response);
+
             res.json({ reply: response });
 
         } catch (error) {
@@ -30,6 +38,7 @@ const chatController = {
             res.status(500).json({ error: "Failed to fetch response from Gemini AI" });
         }
     }
+
 };
 
 export default chatController;
