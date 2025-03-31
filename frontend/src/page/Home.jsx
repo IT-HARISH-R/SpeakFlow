@@ -25,12 +25,15 @@ const Home = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
             >
-                <Link to="/comunicate" 
+                <Link to="/communicate" 
                     className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-full text-lg shadow-lg transition duration-300"
                 >
                     Start Communicating 🚀
                 </Link>
             </motion.div>
+            <h1 className="mt-6 text-sm text-gray-400">
+                &copy; 2025 Harish
+            </h1>
         </div>
     );
 };
